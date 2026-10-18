@@ -1,7 +1,8 @@
-import { Bot, Context, InlineKeyboard } from "grammy";
+import { Bot, Context, InlineKeyboard, InputFile } from "grammy";
 import { db, creators, plans, subscribers, invoices } from "@/lib/db";
 import { eq, and } from "drizzle-orm";
 import { createInvoice } from "@/lib/invoices/engine";
+import { buildZip321Uri, generatePaymentQrBuffer } from "@/lib/zcash";
 
 export function registerCommands(bot: Bot) {
   // 1. /start command
@@ -146,8 +147,16 @@ export function registerCommands(bot: Bot) {
         telegramUsername: username,
       });
 
+      const zip321Uri = buildZip321Uri({
+        address: invoice.payment_address,
+        amountZec: invoice.amount_zec,
+        message: `zkpay:${invoice.id.slice(0, 8)}`,
+      });
+
+      const qrBuffer = await generatePaymentQrBuffer(zip321Uri);
+
       const expiryMin = 15;
-      const text = [
+      const caption = [
         `<b>Zcash Shielded Invoice Created</b>`,
         ``,
         `Amount: <b>${invoice.amount_zec} ZEC</b> (~$${invoice.amount_usd} USD)`,
@@ -157,10 +166,16 @@ export function registerCommands(bot: Bot) {
         `<b>Payment Address (Shielded Diversified):</b>`,
         `<code>${invoice.payment_address}</code>`,
         ``,
-        `<i>Send exact amount from a shielded Zcash wallet (Zashi, YWallet). Upon confirmation, you will receive an exclusive one-time join link.</i>`,
+        `<b>ZIP-321 URI:</b>`,
+        `<code>${zip321Uri}</code>`,
+        ``,
+        `<i>Scan the QR code with Zashi or YWallet. Upon confirmation, you will receive an exclusive one-time join link.</i>`,
       ].join("\n");
 
-      await ctx.reply(text, { parse_mode: "HTML" });
+      await ctx.replyWithPhoto(new InputFile(qrBuffer, "payment-qr.png"), {
+        caption,
+        parse_mode: "HTML",
+      });
     } catch (err: unknown) {
       await ctx.reply(`Failed to create invoice: ${err instanceof Error ? err.message : String(err)}`);
     }

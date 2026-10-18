@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "bun test",
     "test:smoke": "bun run scripts/e2e-testnet-smoke.ts",
-    "db:check": "bun run scripts/check-db.ts"
+    "db:check": "bun run scripts/check-db.ts",
+    "scanner": "bun run scripts/scanner-daemon.ts"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.6",

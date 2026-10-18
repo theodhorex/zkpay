@@ -3,9 +3,11 @@ import { drizzle, type LibSQLDatabase } from "drizzle-orm/libsql";
 import * as schema from "./schema";
 
 const dbUrl = process.env.DATABASE_URL || "file:./zkpay.db";
+const dbAuthToken = process.env.DATABASE_AUTH_TOKEN;
 
 export const client: Client = createClient({
   url: dbUrl,
+  authToken: dbAuthToken,
 });
 
 export const db: LibSQLDatabase<typeof schema> = drizzle(client, { schema });

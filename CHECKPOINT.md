@@ -4,9 +4,9 @@ Last Updated: 2026-10-18 (Milestone 6 Completion)
 
 ## Active Focus
 
-- **Current Phase:** All 6 Milestones Completed
-- **Status:** Hackathon Submission Ready (Zecathon 2026 Track 1: Shielded Payments)
-- **Test Suite:** 40/40 Passing Unit Tests (Bun) + Automated Live Zcash Testnet Smoke Test Passing
+- **Current Phase:** Phase 2 — Zcash x NEAR Intents Flagship Ecosystem Integration
+- **Active Task:** `TASK-7.1` — NEAR Intents 1Click Cross-Chain Settlement Engine (`ZKPAY-26`)
+- **Key Deliverables:** Multi-chain settlement via NEAR Intents 1Click API, checkout web portal with ZODL deep-linking, ZIP-302 encrypted memo auth, and continuous scanner daemon.
 
 ---
 
@@ -35,6 +35,10 @@ Last Updated: 2026-10-18 (Milestone 6 Completion)
 | `TASK-6.1` | `ZKPAY-23` | Live Zcash Testnet End-to-End Smoke Test | Malam 6: Testnet & Demo | Done | QA / Dev |
 | `TASK-6.2` | `ZKPAY-24` | Demo Video Script & Dual-Screen Recording | Malam 6: Testnet & Demo | Done | Dev / Pitch |
 | `TASK-6.3` | `ZKPAY-25` | Submission Package & Final Verification | Malam 6: Testnet & Demo | Done | Lead |
+| `TASK-7.1` | `ZKPAY-26` | NEAR Intents 1Click Cross-Chain Settlement Engine | Phase 2: Ecosystem | In Progress | Dev |
+| `TASK-7.2` | `ZKPAY-27` | Multi-Chain Checkout Web Portal with ZODL & Zashi Deep Links | Phase 2: Ecosystem | Todo | Dev |
+| `TASK-7.3` | `ZKPAY-28` | ZIP-302 Encrypted Memo Decoder & Zero-Knowledge Web Access Pass | Phase 2: Ecosystem | Todo | Dev |
+| `TASK-7.4` | `ZKPAY-29` | Real-Time Background Scanner Daemon & Telegram Join Link Dispatcher | Phase 2: Ecosystem | Todo | Dev |
 
 ---
 

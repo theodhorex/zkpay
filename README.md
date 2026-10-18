@@ -190,18 +190,6 @@ flowchart LR
 
 ---
 
-## 6. Project Roadmap
-
-- [x] **Architecture Specification:** UFVK derivation model, state transitions, and Telegram lifecycle design.
-- [ ] **Phase 1 (Zcash Core):** Standalone module for ZIP-316 diversified address generation and `lightwalletd` block scanner.
-- [ ] **Phase 2 (Invoicing & Database):** Schema design, exchange rate engine (15-min lock), and subscription state machine.
-- [ ] **Phase 3 (Telegram Integration):** Bot `/gabung` flow, dynamic ZIP-321 QR code rendering, and join-request handler.
-- [ ] **Phase 4 (Lifecycle Worker):** Scheduled renewal worker, grace-period notifier, and automated chat eviction.
-- [ ] **Phase 5 (Owner Console):** Web UI for plan management, UFVK configuration, subscriber table, and revenue metrics.
-- [ ] **Phase 6 (Testnet Verification):** End-to-end verification on Zcash testnet with live Zashi wallet, demonstration video, and documentation.
-
----
-
-## 7. License
+## 6. License
 
 MIT License. Developed for Zecathon 2026.

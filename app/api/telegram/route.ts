@@ -1,7 +1,6 @@
 import { webhookCallback } from "grammy";
 import { getBot } from "@/lib/bot/bot";
 
-export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   try {

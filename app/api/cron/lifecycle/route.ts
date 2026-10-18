@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { runLifecycleCycle } from "@/lib/lifecycle/workers";
 import { expireOverdueInvoices } from "@/lib/invoices/engine";
 
-export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   // Optional cron secret authorization

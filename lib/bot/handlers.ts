@@ -11,7 +11,7 @@ export function registerCommands(bot: Bot) {
     const userId = ctx.from?.id ? String(ctx.from.id) : "";
     const username = ctx.from?.username;
 
-    if (payload && payload.startsWith("c_")) {
+    if (typeof payload === "string" && payload.startsWith("c_")) {
       const creatorId = payload.slice(2);
       return handleJoinFlow(ctx, creatorId);
     }

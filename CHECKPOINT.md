@@ -35,10 +35,10 @@ Last Updated: 2026-10-18 (Milestone 6 Completion)
 | `TASK-6.1` | `ZKPAY-23` | Live Zcash Testnet End-to-End Smoke Test | Malam 6: Testnet & Demo | Done | QA / Dev |
 | `TASK-6.2` | `ZKPAY-24` | Demo Video Script & Dual-Screen Recording | Malam 6: Testnet & Demo | Done | Dev / Pitch |
 | `TASK-6.3` | `ZKPAY-25` | Submission Package & Final Verification | Malam 6: Testnet & Demo | Done | Lead |
-| `TASK-7.1` | `ZKPAY-26` | NEAR Intents 1Click Cross-Chain Settlement Engine | Phase 2: Ecosystem | In Progress | Dev |
-| `TASK-7.2` | `ZKPAY-27` | Multi-Chain Checkout Web Portal with ZODL & Zashi Deep Links | Phase 2: Ecosystem | Todo | Dev |
-| `TASK-7.3` | `ZKPAY-28` | ZIP-302 Encrypted Memo Decoder & Zero-Knowledge Web Access Pass | Phase 2: Ecosystem | Todo | Dev |
-| `TASK-7.4` | `ZKPAY-29` | Real-Time Background Scanner Daemon & Telegram Join Link Dispatcher | Phase 2: Ecosystem | Todo | Dev |
+| `TASK-7.1` | `ZKPAY-26` | NEAR Intents 1Click Cross-Chain Settlement Engine | Phase 2: Ecosystem | Done | Dev |
+| `TASK-7.2` | `ZKPAY-27` | Multi-Chain Checkout Web Portal with ZODL & Zashi Deep Links | Phase 2: Ecosystem | Done | Dev |
+| `TASK-7.3` | `ZKPAY-28` | ZIP-302 Encrypted Memo Decoder & Zero-Knowledge Web Access Pass | Phase 2: Ecosystem | Done | Dev |
+| `TASK-7.4` | `ZKPAY-29` | Real-Time Background Scanner Daemon & Telegram Join Link Dispatcher | Phase 2: Ecosystem | Done | Dev |
 
 ---
 
@@ -66,6 +66,10 @@ Last Updated: 2026-10-18 (Milestone 6 Completion)
 - `TASK-6.1`: Implemented automated end-to-end Zcash testnet smoke test script (`scripts/e2e-testnet-smoke.ts`, `bun run test:smoke`). Connected live to `testnet.zec.rocks:443`, scanned blocks with Rust trial decryption, settled invoice, and verified gatekeeper authorization.
 - `TASK-6.2`: Authored comprehensive dual-screen video demo script and reproduction guide (`DEMO_SCRIPT.md`).
 - `TASK-6.3`: Polished README to clean, professional standard without emojis, with architecture diagrams, reproduction commands, and testnet references.
+- `TASK-7.1`: Built NEAR Intents 1Click cross-chain settlement engine (`lib/near-intents/`) supporting multi-chain swap quotes (USDC on Solana, Base, Arbitrum, NEAR, ETH) settling into creator's shielded Zcash address.
+- `TASK-7.2`: Built multi-chain checkout web portal at `/checkout/[invoiceId]` with dual payment tabs, ZIP-321 QR code, 1-tap deep links for ZODL, Zashi, and YWallet, and interactive testnet simulator.
+- `TASK-7.3`: Implemented ZIP-302 encrypted memo parser and Zero-Knowledge Bearer Web Access Pass generator (`lib/auth/bearer.ts`).
+- `TASK-7.4`: Implemented continuous background scanner daemon (`scripts/scanner-daemon.ts`) and cron endpoint (`app/api/cron/scanner`) with sync-height persistence and automated Telegram single-use invite link dispatching. Added Zebra node RPC configuration template.
 
 ### In Progress
 *(None — all milestones complete)*

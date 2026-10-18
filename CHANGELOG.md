@@ -7,14 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased] - Phase 2: Zcash x NEAR Intents Ecosystem Expansion
+## [0.3.0] - 2026-10-18 - Zcash x NEAR Intents Flagship Expansion
 
-### Planned / In Progress
-- Integration of NEAR Intents 1Click Cross-Chain Settlement Engine for multi-chain subscription payments (USDC on Solana, Base, Arbitrum, Ethereum, and NEAR settling into shielded ZEC).
-- Multi-chain checkout web application (`/checkout/[invoiceId]`) with interactive wallet deep-links for ZODL, Zashi, and YWallet.
-- ZIP-302 encrypted memo decoding for bearer web access passes.
-- Continuous background scanner daemon with sync-height tracking and automatic Telegram join link dispatch.
-- Zebra node RPC compatibility configuration.
+### Added
+- NEAR Intents 1Click Cross-Chain Settlement Engine (`lib/near-intents/` and `/api/near-intents/quote`) supporting cross-chain subscriptions from USDC on Solana, Base, Arbitrum, NEAR, and ETH settling directly into the creator's shielded ZEC address.
+- Multi-chain checkout web portal (`/checkout/[invoiceId]`) with dual payment modes: Native Shielded Zcash (ZIP-321 QR code, 1-tap deep links for ZODL, Zashi, and YWallet) and NEAR Intents cross-chain quotes.
+- Testnet simulator button for judges to experience real-time confirmation directly in the browser.
+- ZIP-302 encrypted memo parser and Zero-Knowledge Bearer Web Access Pass generator (`lib/auth/bearer.ts`).
+- Continuous real-time background scanner daemon (`scripts/scanner-daemon.ts`) and cron endpoint (`/api/cron/scanner`) with sync-height persistence and automated Telegram single-use invite link dispatching.
+- Zebra node RPC configuration template in `.env.example`.
+- Automated test suite expanded to 48 passing unit tests across 13 test files.
 
 ---
 

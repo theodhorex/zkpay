@@ -4,9 +4,9 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 
 ## Active Focus
 
-- **Current Phase:** Malam 2 — Database & State Machine (Invoice, Kurs 15 Min, Status)
-- **Active Task:** `TASK-2.1` — Database Schema & Drizzle ORM Setup (`ZKPAY-11`)
-- **Target:** Define relational schema (creators, plans, subscribers, invoices, audit_logs) and setup Drizzle ORM with SQLite/libsql.
+- **Current Phase:** Malam 3 — Bot Telegram (/gabung, ZIP-321 QR, Single-Use Join Request)
+- **Active Task:** `TASK-3.1` — Telegram Bot Core & Command Handler (`ZKPAY-14`)
+- **Target:** Initialize grammY Telegram bot engine, handle `/start`, `/help`, and `/gabung` flow.
 
 ---
 
@@ -20,10 +20,10 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 | `TASK-1.1` | `ZKPAY-8` | ZIP-316 UFVK Address Derivation Service | Malam 1: Zcash Core | Done | Dev |
 | `TASK-1.2` | `ZKPAY-9` | Lightwalletd Client & Block Fetcher | Malam 1: Zcash Core | Done | Dev |
 | `TASK-1.3` | `ZKPAY-10` | Trial Decryption & Payment Detection Hook | Malam 1: Zcash Core | Done | Dev |
-| `TASK-2.1` | `ZKPAY-11` | Database Schema & Drizzle ORM Setup | Malam 2: Data & State | In Progress | Dev |
-| `TASK-2.2` | `ZKPAY-12` | Exchange Rate Oracle with 15-Minute Lock | Malam 2: Data & State | Todo | Dev |
-| `TASK-2.3` | `ZKPAY-13` | Invoicing State Machine Engine | Malam 2: Data & State | Todo | Dev |
-| `TASK-3.1` | `ZKPAY-14` | Telegram Bot Core & Command Handler (`/start`, `/gabung`) | Malam 3: Telegram | Todo | Dev |
+| `TASK-2.1` | `ZKPAY-11` | Database Schema & Drizzle ORM Setup | Malam 2: Data & State | Done | Dev |
+| `TASK-2.2` | `ZKPAY-12` | Exchange Rate Oracle with 15-Minute Lock | Malam 2: Data & State | Done | Dev |
+| `TASK-2.3` | `ZKPAY-13` | Invoicing State Machine Engine | Malam 2: Data & State | Done | Dev |
+| `TASK-3.1` | `ZKPAY-14` | Telegram Bot Core & Command Handler (`/start`, `/gabung`) | Malam 3: Telegram | In Progress | Dev |
 | `TASK-3.2` | `ZKPAY-15` | ZIP-321 URI & Dynamic QR Generator | Malam 3: Telegram | Todo | Dev |
 | `TASK-3.3` | `ZKPAY-16` | Single-Use Join Request Gatekeeper (`creates_join_request`) | Malam 3: Telegram | Todo | Dev |
 | `TASK-4.1` | `ZKPAY-17` | Renewal Worker & H-3 Reminder Job (Cron) | Malam 4: Lifecycle | Todo | Dev |
@@ -47,9 +47,12 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 - `TASK-1.1`: Implemented and tested ZIP-316 diversified address derivation from Unified Full Viewing Keys (`uview1...` / `uviewtest1...`) with Rust core engine and TypeScript wrapper (`lib/zcash/derive.ts`). Verified with 100% passing tests in both Rust and Bun.
 - `TASK-1.2`: Implemented `LightwalletdClient` in `lib/zcash/lightwalletd.ts` using `@grpc/grpc-js` and official `.proto` files. Connected live to `testnet.zec.rocks:443`, verified querying node info, latest block height (4,515,479+), and streaming compact blocks. Verified with 100% passing Bun tests.
 - `TASK-1.3`: Implemented Orchard and Sapling compact block trial decryption in Rust (`crates/zkpay-core/src/scanner.rs`) and TypeScript wrapper (`lib/zcash/scanner.ts`). Integrated live block scanning against testnet nodes. Verified with 100% passing test suite.
+- `TASK-2.1`: Configured Drizzle ORM and LibSQL/SQLite database layer with tables for `creators`, `plans`, `subscribers`, `invoices`, `rates_cache`, and `audit_logs`. Added test isolation with in-memory runner (`lib/db/db.test.ts`).
+- `TASK-2.2`: Implemented multi-provider ZEC/USD exchange rate oracle with CoinGecko prioritization, DB caching, exact zatoshis calculation (10^8), and 15-minute price lock quote generation (`lib/rates/oracle.ts`).
+- `TASK-2.3`: Built complete invoicing state machine engine (`createInvoice`, `processDetectedPayment`, `expireOverdueInvoices`) with automatic subscriber activation (30-day period + 3-day grace period), underpaid flagging, and audit logging (`lib/invoices/engine.ts`).
 
 ### In Progress
-- `TASK-2.1`: Database Schema & Drizzle ORM Setup (`ZKPAY-11`).
+- `TASK-3.1`: Telegram Bot Core & Command Handler (`ZKPAY-14`).
 
 ### Need to Review
 *(Empty)*

@@ -5,8 +5,8 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 ## Active Focus
 
 - **Current Phase:** Malam 1 — Fondasi Zcash (UFVK Diversifier & Scanner Lightwalletd)
-- **Active Task:** `TASK-1.1` — ZIP-316 UFVK Address Derivation Service
-- **Target:** Verify diversified address derivation from Unified Full Viewing Keys (`uview1...` / `uviewtest1...`) without spending keys.
+- **Active Task:** `TASK-1.2` — Lightwalletd Client & Block Fetcher
+- **Target:** Connect to testnet lightwalletd and fetch latest block heights and compact blocks.
 
 ---
 
@@ -17,8 +17,8 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 | `INIT-01` | Project Scaffolding (Next.js 16, Bun, Tailwind v4) | Setup | Done | Core |
 | `INIT-02` | Competitive Analysis & Zcash Track Fit Audit | Architecture | Done | Core |
 | `INIT-03` | Technical Specification & Clean README Setup | Documentation | Done | Core |
-| `TASK-1.1` | ZIP-316 UFVK Address Derivation Service | Malam 1: Zcash Core | In Progress | Dev |
-| `TASK-1.2` | Lightwalletd Client & Block Fetcher | Malam 1: Zcash Core | Todo | Dev |
+| `TASK-1.1` | ZIP-316 UFVK Address Derivation Service | Malam 1: Zcash Core | Done | Dev |
+| `TASK-1.2` | Lightwalletd Client & Block Fetcher | Malam 1: Zcash Core | In Progress | Dev |
 | `TASK-1.3` | Trial Decryption & Payment Detection Hook | Malam 1: Zcash Core | Todo | Dev |
 | `TASK-2.1` | Database Schema & Drizzle ORM Setup | Malam 2: Data & State | Todo | Dev |
 | `TASK-2.2` | Exchange Rate Oracle with 15-Minute Lock | Malam 2: Data & State | Todo | Dev |
@@ -44,9 +44,10 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 - `INIT-01`: Initialized Next.js 16.4 with Bun 1.4, Tailwind CSS v4, and App Router.
 - `INIT-02`: Validated originality against EVM zk projects (zkBob, Railgun); confirmed track alignment with Track 1: Shielded Payments ($15,000).
 - `INIT-03`: Documented complete privacy model, state machine, and system architecture in `README.md` (`372ce79`).
+- `TASK-1.1`: Implemented and tested ZIP-316 diversified address derivation from Unified Full Viewing Keys (`uview1...` / `uviewtest1...`) with Rust core engine and TypeScript wrapper (`lib/zcash/derive.ts`). Verified with 100% passing tests in both Rust and Bun.
 
 ### In Progress
-- `TASK-1.1`: Implementing ZIP-316 address derivation module from UFVK.
+- `TASK-1.2`: Lightwalletd client & block fetcher implementation.
 
 ### Need to Review
 *(Empty)*

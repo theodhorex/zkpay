@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "bun test",
+    "test:smoke": "bun run scripts/e2e-testnet-smoke.ts"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.6",

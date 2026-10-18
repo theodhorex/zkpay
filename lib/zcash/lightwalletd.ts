@@ -48,8 +48,12 @@ export class LightwalletdClient {
   private client: any;
   private endpoint: string;
 
-  constructor(endpoint?: string) {
-    this.endpoint = endpoint || process.env.ZCASH_LIGHTWALLETD_URL || "testnet.zec.rocks:443";
+  constructor(endpointOrOptions?: string | { endpoint?: string }) {
+    if (typeof endpointOrOptions === "object" && endpointOrOptions !== null) {
+      this.endpoint = endpointOrOptions.endpoint || process.env.ZCASH_LIGHTWALLETD_URL || "testnet.zec.rocks:443";
+    } else {
+      this.endpoint = endpointOrOptions || process.env.ZCASH_LIGHTWALLETD_URL || "testnet.zec.rocks:443";
+    }
 
     const packageDefinition = protoLoader.loadSync(
       path.resolve(process.cwd(), "proto/service.proto"),

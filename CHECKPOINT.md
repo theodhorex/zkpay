@@ -4,9 +4,9 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 
 ## Active Focus
 
-- **Current Phase:** Malam 3 — Bot Telegram (/gabung, ZIP-321 QR, Single-Use Join Request)
-- **Active Task:** `TASK-3.1` — Telegram Bot Core & Command Handler (`ZKPAY-14`)
-- **Target:** Initialize grammY Telegram bot engine, handle `/start`, `/help`, and `/gabung` flow.
+- **Current Phase:** Malam 4 — Siklus Langganan (Cron H-3, Masa Tenggang, Auto-Kick)
+- **Active Task:** `TASK-4.1` — Renewal Worker & H-3 Reminder Job (`ZKPAY-17`)
+- **Target:** Automate recurring renewal invoices, trigger H-3 Telegram reminder notifications, and manage renewal state.
 
 ---
 
@@ -23,10 +23,10 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 | `TASK-2.1` | `ZKPAY-11` | Database Schema & Drizzle ORM Setup | Malam 2: Data & State | Done | Dev |
 | `TASK-2.2` | `ZKPAY-12` | Exchange Rate Oracle with 15-Minute Lock | Malam 2: Data & State | Done | Dev |
 | `TASK-2.3` | `ZKPAY-13` | Invoicing State Machine Engine | Malam 2: Data & State | Done | Dev |
-| `TASK-3.1` | `ZKPAY-14` | Telegram Bot Core & Command Handler (`/start`, `/gabung`) | Malam 3: Telegram | In Progress | Dev |
-| `TASK-3.2` | `ZKPAY-15` | ZIP-321 URI & Dynamic QR Generator | Malam 3: Telegram | Todo | Dev |
-| `TASK-3.3` | `ZKPAY-16` | Single-Use Join Request Gatekeeper (`creates_join_request`) | Malam 3: Telegram | Todo | Dev |
-| `TASK-4.1` | `ZKPAY-17` | Renewal Worker & H-3 Reminder Job (Cron) | Malam 4: Lifecycle | Todo | Dev |
+| `TASK-3.1` | `ZKPAY-14` | Telegram Bot Core & Command Handler (`/start`, `/gabung`) | Malam 3: Telegram | Done | Dev |
+| `TASK-3.2` | `ZKPAY-15` | ZIP-321 URI & Dynamic QR Generator | Malam 3: Telegram | Done | Dev |
+| `TASK-3.3` | `ZKPAY-16` | Single-Use Join Request Gatekeeper (`creates_join_request`) | Malam 3: Telegram | Done | Dev |
+| `TASK-4.1` | `ZKPAY-17` | Renewal Worker & H-3 Reminder Job (Cron) | Malam 4: Lifecycle | In Progress | Dev |
 | `TASK-4.2` | `ZKPAY-18` | Grace Period & Eviction Worker (`ban` + `unban`) | Malam 4: Lifecycle | Todo | Dev |
 | `TASK-4.3` | `ZKPAY-19` | Edge Cases & Discrepancy Handler (Under/Overpaid) | Malam 4: Lifecycle | Todo | Dev |
 | `TASK-5.1` | `ZKPAY-20` | Creator Onboarding & UFVK Configuration View | Malam 5: Dashboard | Todo | Dev |
@@ -50,9 +50,12 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 - `TASK-2.1`: Configured Drizzle ORM and LibSQL/SQLite database layer with tables for `creators`, `plans`, `subscribers`, `invoices`, `rates_cache`, and `audit_logs`. Added test isolation with in-memory runner (`lib/db/db.test.ts`).
 - `TASK-2.2`: Implemented multi-provider ZEC/USD exchange rate oracle with CoinGecko prioritization, DB caching, exact zatoshis calculation (10^8), and 15-minute price lock quote generation (`lib/rates/oracle.ts`).
 - `TASK-2.3`: Built complete invoicing state machine engine (`createInvoice`, `processDetectedPayment`, `expireOverdueInvoices`) with automatic subscriber activation (30-day period + 3-day grace period), underpaid flagging, and audit logging (`lib/invoices/engine.ts`).
+- `TASK-3.1`: Integrated grammY Telegram bot core in `lib/bot/bot.ts`, handlers for `/start`, `/help`, `/status`, and `/gabung`, and Next.js App Router webhook endpoint in `app/api/telegram/route.ts`.
+- `TASK-3.2`: Implemented ZIP-321 standard payment URI builder, parser, and PNG/Data URL/SVG QR code generation in `lib/zcash/zip321.ts`. Connected direct QR code rendering into bot response.
+- `TASK-3.3`: Implemented single-use join request gatekeeper in `lib/bot/gatekeeper.ts` listening to `chat_join_request` events to auto-approve verified shielded subscribers and auto-decline unauthorized link forwarders.
 
 ### In Progress
-- `TASK-3.1`: Telegram Bot Core & Command Handler (`ZKPAY-14`).
+- `TASK-4.1`: Renewal Worker & H-3 Reminder Job (`ZKPAY-17`).
 
 ### Need to Review
 *(Empty)*

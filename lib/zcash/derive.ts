@@ -32,7 +32,7 @@ export interface GenerateTestAccountResult {
 }
 
 
-function getBinaryPath(): string {
+export function getBinaryPath(): string {
   // Check release binary first, fallback to debug
   const releasePath = path.resolve(process.cwd(), "crates/zkpay-core/target/release/zkpay-core");
   if (fs.existsSync(releasePath)) {

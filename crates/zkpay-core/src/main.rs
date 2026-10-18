@@ -6,6 +6,8 @@ use zcash_address::unified::{Encoding, Ufvk};
 use zcash_keys::keys::{UnifiedAddressRequest, UnifiedFullViewingKey, UnifiedSpendingKey};
 use zcash_protocol::consensus::{Network, NetworkType};
 
+mod scanner;
+
 #[derive(Parser)]
 #[command(name = "zkpay-core")]
 #[command(about = "Zcash cryptographic core engine for zkpay", long_about = None)]
@@ -32,6 +34,15 @@ enum Commands {
     GenerateTestAccount {
         #[arg(long, default_value_t = 0)]
         seed_nonce: u8,
+    },
+    /// Scan a CompactBlock for incoming payments to the given UFVK
+    ScanCompactBlock {
+        #[arg(long)]
+        ufvk: String,
+        #[arg(long)]
+        block_hex: Option<String>,
+        #[arg(long)]
+        block_file: Option<String>,
     },
 }
 
@@ -195,6 +206,85 @@ fn main() {
                 default_address: default_addr,
             };
             println!("{}", serde_json::to_string_pretty(&resp).unwrap());
+        }
+        Commands::ScanCompactBlock {
+            ufvk,
+            block_hex,
+            block_file,
+        } => {
+            let (network, ufvk_parsed) = match parse_ufvk(&ufvk) {
+                Ok(res) => res,
+                Err(err) => {
+                    let resp = scanner::ScanResult {
+                        success: false,
+                        block_height: 0,
+                        block_hash: String::new(),
+                        payments_found: vec![],
+                        error: Some(format!("Invalid UFVK: {}", err)),
+                    };
+                    println!("{}", serde_json::to_string_pretty(&resp).unwrap());
+                    process::exit(1);
+                }
+            };
+
+            let raw_bytes = if let Some(hex_str) = block_hex {
+                match hex::decode(hex_str.trim()) {
+                    Ok(b) => b,
+                    Err(e) => {
+                        let resp = scanner::ScanResult {
+                            success: false,
+                            block_height: 0,
+                            block_hash: String::new(),
+                            payments_found: vec![],
+                            error: Some(format!("Invalid block hex: {:?}", e)),
+                        };
+                        println!("{}", serde_json::to_string_pretty(&resp).unwrap());
+                        process::exit(1);
+                    }
+                }
+            } else if let Some(path) = block_file {
+                match std::fs::read(&path) {
+                    Ok(b) => b,
+                    Err(e) => {
+                        let resp = scanner::ScanResult {
+                            success: false,
+                            block_height: 0,
+                            block_hash: String::new(),
+                            payments_found: vec![],
+                            error: Some(format!("Failed to read block file: {:?}", e)),
+                        };
+                        println!("{}", serde_json::to_string_pretty(&resp).unwrap());
+                        process::exit(1);
+                    }
+                }
+            } else {
+                let resp = scanner::ScanResult {
+                    success: false,
+                    block_height: 0,
+                    block_hash: String::new(),
+                    payments_found: vec![],
+                    error: Some("Either --block-hex or --block-file must be provided".to_string()),
+                };
+                println!("{}", serde_json::to_string_pretty(&resp).unwrap());
+                process::exit(1);
+            };
+
+            match scanner::scan_compact_block_bytes(&network, &ufvk_parsed, &raw_bytes) {
+                Ok(result) => {
+                    println!("{}", serde_json::to_string_pretty(&result).unwrap());
+                }
+                Err(e) => {
+                    let resp = scanner::ScanResult {
+                        success: false,
+                        block_height: 0,
+                        block_hash: String::new(),
+                        payments_found: vec![],
+                        error: Some(e),
+                    };
+                    println!("{}", serde_json::to_string_pretty(&resp).unwrap());
+                    process::exit(1);
+                }
+            }
         }
     }
 }

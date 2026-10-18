@@ -48,7 +48,7 @@ export class LightwalletdClient {
   private client: any;
   private endpoint: string;
 
-  constructor(endpointOrOptions?: string | { endpoint?: string }) {
+  constructor(endpointOrOptions?: string | { endpoint?: string; useTls?: boolean }) {
     if (typeof endpointOrOptions === "object" && endpointOrOptions !== null) {
       this.endpoint = endpointOrOptions.endpoint || process.env.ZCASH_LIGHTWALLETD_URL || "testnet.zec.rocks:443";
     } else {

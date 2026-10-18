@@ -1,187 +1,207 @@
-# zkpay (ZecSub) 🛡️⚡
-> **Zero-Custody Shielded Subscriptions & Gated Community Access for Zcash**  
-> Built for **Zecathon 2026** — *Track 1: Shielded Payments ($15,000)*
+# zkpay — zero-custody shielded subscriptions & gated community access on Zcash
 
-[![Zcash](https://img.shields.io/badge/Zcash-Shielded%20Orchard-black?logo=zcash)](https://z.cash)
-[![Next.js](https://img.shields.io/badge/Next.js-16.4-black?logo=next.js)](https://nextjs.org)
-[![Bun](https://img.shields.io/badge/Bun-1.4-black?logo=bun)](https://bun.sh)
-[![Telegram Bot API](https://img.shields.io/badge/Telegram-Bot%20API-blue?logo=telegram)](https://core.telegram.org/bots)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+| | |
+|---|---|
+| **Track** | Track 1: Shielded Payments ($15,000) & Consumer Privacy Apps |
+| **Network** | Zcash (testnet default, mainnet compatible) |
+| **Shielded Protocol** | Orchard (Halo 2 zero-knowledge SNARKs) & Sapling via `lightwalletd` |
+| **Key Standards** | ZIP-316 (Unified Full Viewing Keys & Diversified Addresses), ZIP-321 (Payment Request URIs) |
+| **Stack** | Next.js 16 (App Router), Bun 1.4, Tailwind CSS v4, SQLite / LibSQL, Telegram Bot API |
 
----
+### TL;DR
 
-## 💡 The Pitch
+zkpay is a non-custodial recurring subscription and access-gating protocol built natively on Zcash shielded pools. It allows content creators, independent journalists, and private alpha communities to run paid Telegram groups and gated web portals with:
 
-> *"Subscriptions without emails, credit cards, or KYC. Payments that move without publishing who paid whom or exposing the creator's total income to the public."*
-
-**zkpay** is a decentralized, non-custodial recurring subscription and membership protocol for Telegram communities and exclusive web publications, powered natively by **Zcash Shielded Pools (Orchard/Sapling)** and **Unified Full Viewing Keys (ZIP-316)**.
-
----
-
-## 🚨 The Problem
-
-| Problem | Traditional Web2 (Stripe, Patreon, Midtrans) | Transparent Blockchains (TON, USDT, Solana) |
-|---|---|---|
-| **Payer Privacy** | Full real-name KYC, credit card, home address required. | Wallet address, balance, and entire transaction history are public. |
-| **Creator Privacy** | Bank accounts frozen at will; platform takes 8–15% cut. | Total monthly revenue and all subscriber wallets exposed on block explorers. |
-| **Custody Risk** | Platform holds funds in escrow before payout. | Smart contract hacks, relayer dependencies, gas spikes. |
-| **Community Gating** | Manual invite links or surveillance bots. | Links get leaked; anyone can forward an invite link. |
+- **Zero custody risk:** Community owners never share seed phrases or private keys. They register only their Unified Full Viewing Key (`uview1...`). All subscriber payments settle directly into the creator's personal shielded wallet (e.g. Zashi).
+- **Two-way transactional privacy:** Subscribers never reveal their funding wallet address or account balances to the creator; creators never reveal their total subscriber count or monthly earnings on a public block explorer.
+- **Cryptographic gating:** Single-use Telegram invite links powered by `creates_join_request: true` with automated payer identity verification, scheduled renewal reminders, and automated member lifecycle management.
 
 ---
 
-## ⚡ The Solution: zkpay
-
-`zkpay` bridges Zcash Layer-1 zero-knowledge cryptography with real-world digital community commerce:
-
-1. **Zero-Custody Merchant Setup:** Community owners never deposit seed phrases or private keys. They only register their **Unified Full Viewing Key (`uview1...`)**. All subscriber funds settle directly and instantly into the creator's personal shielded wallet (e.g., Zashi).
-2. **ZIP-316 Diversified Addresses:** For every invoice or renewal, `zkpay` derives a unique, isolated Unified Address (`u1...`) from the creator's UFVK. No cross-customer address reuse, no transaction linkability.
-3. **ZIP-321 Payment Request Standard:** Invoices are encoded as compliant `zcash:u1...?amount=X&memo=Y` QR codes, allowing 1-tap scan & shielded payments with auto-filled amounts in Zashi or YWallet.
-4. **Single-Use Secure Telegram Invites:** Bot issues cryptographically bounded invite links using Telegram's `creates_join_request: true`. When a user clicks, the bot verifies their Telegram ID against the paid invoice and revokes the link instantly—preventing link leakages.
-5. **Automated Membership Lifecycle:** Continuous tracking for 1-block confirmations, renewal reminders 3 days before expiration, 2-day grace periods, and non-destructive automated member removal (`ban` + immediate `unban`).
-6. **Anonymous Web Pass Mode:** For users who don't want to disclose their Telegram handle, zkpay delivers an ephemeral secret token via encrypted Zcash memos (ZIP-302) for private browser-based content access.
-
----
-
-## 🔒 Privacy Model: Who Knows What?
-
-| Participant | What They Know | What They CANNOT See |
-|---|---|---|
-| **Community Owner** | Telegram ID & active subscription status | Payer's wallet address, funding source, total wealth |
-| **Subscriber** | Plan details & payment recipient address | Other subscribers' identities, creator's total revenue |
-| **zkpay Server** | Invoice IDs, rate lock, & viewing key match | Creator's spending keys (server CANNOT steal or move funds) |
-| **Telegram** | User membership in the group | Any payment details, transaction hash, or crypto data |
-| **Blockchain Observers** | Encrypted blob in Orchard pool (shielded) | Sender, receiver, amount, memo, or recurring pattern |
-
----
-
-## 🔄 Subscription State Machine
-
-```
-   [ Invoice Created ] ──(15 min rate lock)──> [ Awaiting Payment ]
-                                                       │
-                                               Payment Detected (0-conf)
-                                                       │
-                                                       ▼
-                                            [ Detected: Waiting 1 Block ]
-                                                       │
-                                               Block Confirmed (~75s)
-                                                       │
-                                                       ▼
-                                            [ Active (30 Days) ]
-                                            • Issues single-use join request
-                                            • Automatically approves member
-                                                       │
-                                               3 Days Remaining
-                                                       │
-                                                       ▼
-                                            [ Expiring Soon: Send Reminder ]
-                                                       │
-                                                   Expired
-                                                       │
-                                                       ▼
-                                            [ Grace Period (2 Days) ]
-                                                       │
-                                               Grace Period Ended
-                                                       │
-                                                       ▼
-                                            [ Revoked / Auto-Kicked ]
-```
-
----
-
-## 🏗️ Architecture
-
-```mermaid
-flowchart TD
-    subgraph Client ["Clients"]
-        MemberTelegram["Subscriber (Telegram / Web)"]
-        OwnerWeb["Community Owner (Dashboard)"]
-    end
-
-    subgraph Core ["zkpay Core Engine (Next.js 16 + Bun)"]
-        API["REST / Webhook API"]
-        DB[(SQLite / LibSQL)]
-        Engine["Subscription State Engine"]
-        Deriver["ZIP-316 Address Deriver"]
-        Bot["Telegram Bot Service (Bot API)"]
-    end
-
-    subgraph ZcashNetwork ["Zcash Network Layer"]
-        LWD["lightwalletd gRPC / RPC Node"]
-        OrchardPool["Zcash Shielded Pool (Orchard)"]
-    end
-
-    OwnerWeb -->|Registers UFVK uview1...| API
-    MemberTelegram -->|/gabung command| Bot
-    Bot --> API
-    API --> Deriver
-    Deriver -->|Derives unique u1... address| Bot
-    Bot -->|Delivers ZIP-321 QR Code| MemberTelegram
-
-    MemberTelegram -->|Shielded Payment| OrchardPool
-    OrchardPool --> LWD
-    Engine -->|Polls / Scans Blocks with UFVK| LWD
-    Engine -->|1-block confirmation match| DB
-    Engine -->|Trigger Join Approval / Revocation| Bot
-```
-
----
-
-## 🛠️ Tech Stack
-
-- **Framework:** Next.js 16 (App Router, Server Actions)
-- **Runtime & Package Manager:** Bun 1.4+
-- **Styling:** Tailwind CSS v4
-- **Database & ORM:** SQLite / LibSQL + Drizzle ORM
-- **Zcash Cryptography:**
-  - `ZIP-316`: Unified Full Viewing Key (UFVK) & Diversified Unified Addresses
-  - `ZIP-321`: Payment Request URI & QR generation
-  - `lightwalletd`: gRPC/RPC shielded block trial decryption
-- **Messaging & Gating:** Telegram Bot API (`telegraf` / `grammy`) with `createChatInviteLink` & `approveChatJoinRequest`
-
----
-
-## 📅 6-Day Hackathon Roadmap
-
-- [x] **Day 0:** Concept validation, architecture design, and competitive audit against EVM/Web2 solutions.
-- [ ] **Day 1 (Core Cryptography):** UFVK address derivation (`uview1...` -> `u1...`) and `lightwalletd` scanner proof-of-concept.
-- [ ] **Day 2 (Data & State Engine):** Database schemas, price locking (15 min), invoice generator, and state machine tests.
-- [ ] **Day 3 (Telegram Automation):** Bot `/gabung` flow, ZIP-321 QR rendering, single-use join request approval logic.
-- [ ] **Day 4 (Subscription Lifecycle):** Expiration scheduler (H-3 reminder, 2-day grace period, auto-kick via ban/unban).
-- [ ] **Day 5 (Owner Dashboard):** Next.js UI for creators (UFVK setup, plan pricing, subscriber analytics, CSV export).
-- [ ] **Day 6 (End-to-End Verification & Demo):** Testnet execution with live ZEC, recorded video demo, and final pitch deck.
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- [Bun](https://bun.sh) (v1.2+) or Node.js (v20+)
-- A Telegram Bot Token from [@BotFather](https://t.me/BotFather)
-- A Zcash testnet or mainnet wallet with UFVK export support (e.g., [Zashi](https://zashi.z.cash/))
-
-### Installation
+### Quickstart (Local Development)
 
 ```bash
-# Clone the repository
+# 1. Clone repository and install dependencies
 git clone https://github.com/theodhorex/zkpay.git
 cd zkpay
-
-# Install dependencies
 bun install
 
-# Configure environment variables
+# 2. Configure environment variables
 cp .env.example .env.local
+# Set TELEGRAM_BOT_TOKEN and ZCASH_LIGHTWALLETD_URL in .env.local
 
-# Run the development server
+# 3. Run development server
 bun dev
 ```
 
-Visit `http://localhost:3000` to access the creator dashboard.
+Open `http://localhost:3000` to access the creator management console.
 
 ---
 
-## 📜 License
+## 1. Originality & Track Fit
 
-MIT License — see [LICENSE](LICENSE) for details. Built with ❤️ for the Zcash privacy community at **Zecathon 2026**.
+### The problem
+
+Community subscriptions today are broken by two extremes:
+
+1. **Surveillance Web2 (Stripe, Patreon, Substack):** Requires full identity verification, credit cards, and residential addresses from buyers. Platforms take 8–15% cuts, enforce arbitrary content restrictions, and can freeze merchant balances at will.
+2. **Transparent Blockchains (TON, USDT, Solana):** Every transaction is permanently visible on public ledgers. If a subscriber pays a creator on a transparent chain, anyone can inspect the transaction hash to view the creator's total income, aggregate subscriber volume, and other members' private wallet balances.
+
+### Our point of view
+
+Privacy in digital commerce should not require trusted relayers, centralized mixers, or complex gas-heavy zero-knowledge rollup circuits. Zcash already solved Layer-1 privacy through shielded pools (Orchard and Sapling).
+
+What is missing is a **practical merchant layer**: an engine that combines Zcash's native **Unified Full Viewing Keys (ZIP-316)** and **Payment Request URIs (ZIP-321)** with consumer messaging workflows (Telegram) to make recurring private subscriptions turnkey.
+
+### What is distinct about zkpay
+
+- **True zero-custody (UFVK-only):** The platform cannot steal, hold, or delay funds. The server operates strictly on a read-only viewing key.
+- **Diversified address matching:** Each invoice generates a unique diversified unified address (`u1...` / `utest1...`) derived from the creator's UFVK. No address reuse across customers, preventing off-chain linkability while routing 100% of funds to the same underlying wallet.
+- **Deterministic Telegram join validation:** Instead of shareable invite links, zkpay creates join requests bound to the specific Telegram user ID associated with the paid invoice. Forwarded links cannot be claimed by unauthorized parties.
+- **Zero-knowledge renewal & web access:** Encrypted memos (ZIP-302) allow subscribers to submit renewal identifiers or generate secret web access tokens without requiring email addresses or user accounts.
+
+---
+
+## 2. Technical Architecture & Protocols
+
+### 2.1 Zero-Custody Key Management (ZIP-316)
+
+```
+Creator Wallet (Zashi / YWallet)
+  │
+  ├── Spending Key (Private / Seed Phrase) ──> Stays on Creator Device ONLY
+  │
+  └── Unified Full Viewing Key (uview1...) ──> Exported to zkpay Server
+        │
+        ├── Diversifier Index 101 ──> u1_invoice_101 (Subscriber A)
+        ├── Diversifier Index 102 ──> u1_invoice_102 (Subscriber B)
+        └── Diversifier Index 103 ──> u1_invoice_103 (Subscriber C)
+```
+
+1. The community creator exports their **Unified Full Viewing Key (`uview1...` / `uviewtest1...`)** to zkpay.
+2. When a subscriber initiates `/gabung` in Telegram or checks out on the web, zkpay calculates a new diversified unified address using an incrementing diversifier index.
+3. All derived addresses map to the creator's same shielded account, but appear completely distinct and unlinked to external observers.
+
+### 2.2 Payment Detection & Trial Decryption
+
+- zkpay monitors incoming blocks from `lightwalletd` instances via gRPC / JSON-RPC.
+- Incoming shielded transaction outputs in the Orchard pool are trial-decrypted using the registered UFVK.
+- When an output decrypts successfully, the scanner extracts:
+  - The destination diversifier (identifying the invoice).
+  - The exact ZEC amount received.
+  - The encrypted memo payload (if present).
+- Settlement policy requires **1 block confirmation** (~75 seconds) before triggering fulfillment.
+
+### 2.3 Telegram Access Gating
+
+Access to private channels and supergroups is automated through the Telegram Bot API:
+
+1. **Invite Generation:** Bot invokes `createChatInviteLink` with `creates_join_request: true`.
+2. **Join Request Interception:** When the subscriber clicks the link, Telegram emits a `chat_join_request` update containing the user's numeric `user_id`.
+3. **Identity Verification:** The bot checks whether `user_id` matches the paid invoice record. If verified, it calls `approveChatJoinRequest` and immediately invokes `revokeChatInviteLink`.
+4. **Subscription Expiration:** If a subscription lapses past its grace period, the bot issues `banChatMember` followed immediately by `unbanChatMember`. This removes the user from the chat without adding them to a permanent blacklist, allowing automatic re-entry upon future renewal.
+
+---
+
+## 3. Privacy Model: Who Knows What
+
+| Entity | Visible Data | Hidden Data |
+|---|---|---|
+| **Community Creator** | Subscriber Telegram user ID, active subscription duration, package tier | Subscriber wallet address, source of funds, total net worth |
+| **Subscriber** | Package details, payment address, locked exchange rate | Identities of other subscribers, creator total earnings |
+| **zkpay Server** | Invoice IDs, derived addresses, rate lock timestamps, viewing keys | Spending keys (server cannot execute transfers or withdraw funds) |
+| **Telegram Platform** | User presence in group/channel | Payment records, transaction hashes, amounts, crypto addresses |
+| **Blockchain Observers** | Shielded transaction bundle in Orchard pool | Sender address, recipient address, transacted amount, memo |
+
+---
+
+## 4. Subscription State Machine
+
+```
++------------------+
+|  Invoice Created | ---- (15-min exchange rate lock)
++------------------+
+         |
+         | Payment detected in mempool
+         v
++------------------+
+|     Detected     | ---- (Waiting for 1 block confirmation ~75s)
++------------------+
+         |
+         | 1 confirmation verified on chain
+         v
++------------------+
+|      Active      | ---- (Access granted via single-use join request, valid for 30 days)
++------------------+
+         |
+         | 3 days before expiration
+         v
++------------------+
+|   Expiring Soon  | ---- (Bot sends renewal reminder + new ZIP-321 QR code)
++------------------+
+         |
+         | Expiration date reached without payment
+         v
++------------------+
+|   Grace Period   | ---- (2 days buffer period with reminder notifications)
++------------------+
+         |
+         | Grace period ends
+         v
++------------------+
+| Revoked / Kicked | ---- (Bot performs ban + unban to evict; re-entry enabled on payment)
++------------------+
+```
+
+---
+
+## 5. System Components
+
+```mermaid
+flowchart LR
+    subgraph Users ["Users"]
+        Sub["Subscriber"]
+        Owner["Creator / Community Owner"]
+    end
+
+    subgraph Service ["zkpay Service"]
+        Web["Dashboard (Next.js 16)"]
+        Bot["Telegram Bot"]
+        Engine["State Machine & Invoicing Engine"]
+        DB[(SQLite / LibSQL)]
+        Scanner["Zcash UFVK Scanner"]
+    end
+
+    subgraph Zcash ["Zcash Protocol"]
+        LWD["lightwalletd Node"]
+        Chain["Zcash Shielded Pool (Orchard)"]
+    end
+
+    Owner -->|Register UFVK & Pricing| Web
+    Sub -->|/gabung & Pay ZIP-321 QR| Bot
+    Bot --> Engine
+    Web --> DB
+    Engine --> DB
+    Scanner -->|gRPC / RPC Stream| LWD
+    LWD --> Chain
+    Scanner -->|Matched Invoices| Engine
+    Engine -->|Approve / Revoke Access| Bot
+```
+
+---
+
+## 6. Project Roadmap
+
+- [x] **Architecture Specification:** UFVK derivation model, state transitions, and Telegram lifecycle design.
+- [ ] **Phase 1 (Zcash Core):** Standalone module for ZIP-316 diversified address generation and `lightwalletd` block scanner.
+- [ ] **Phase 2 (Invoicing & Database):** Schema design, exchange rate engine (15-min lock), and subscription state machine.
+- [ ] **Phase 3 (Telegram Integration):** Bot `/gabung` flow, dynamic ZIP-321 QR code rendering, and join-request handler.
+- [ ] **Phase 4 (Lifecycle Worker):** Scheduled renewal worker, grace-period notifier, and automated chat eviction.
+- [ ] **Phase 5 (Owner Console):** Web UI for plan management, UFVK configuration, subscriber table, and revenue metrics.
+- [ ] **Phase 6 (Testnet Verification):** End-to-end verification on Zcash testnet with live Zashi wallet, demonstration video, and documentation.
+
+---
+
+## 7. License
+
+MIT License. Developed for Zecathon 2026.

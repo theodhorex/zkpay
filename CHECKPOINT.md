@@ -4,9 +4,9 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 
 ## Active Focus
 
-- **Current Phase:** Malam 4 — Siklus Langganan (Cron H-3, Masa Tenggang, Auto-Kick)
-- **Active Task:** `TASK-4.1` — Renewal Worker & H-3 Reminder Job (`ZKPAY-17`)
-- **Target:** Automate recurring renewal invoices, trigger H-3 Telegram reminder notifications, and manage renewal state.
+- **Current Phase:** Malam 5 — Dashboard Pemilik (Next.js UI: Omzet, Member, Set UFVK)
+- **Active Task:** `TASK-5.1` — Creator Onboarding & UFVK Configuration View (`ZKPAY-20`)
+- **Target:** Next.js App Router creator dashboard, UFVK validator UI, channel configuration, and stats view.
 
 ---
 
@@ -26,10 +26,10 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 | `TASK-3.1` | `ZKPAY-14` | Telegram Bot Core & Command Handler (`/start`, `/gabung`) | Malam 3: Telegram | Done | Dev |
 | `TASK-3.2` | `ZKPAY-15` | ZIP-321 URI & Dynamic QR Generator | Malam 3: Telegram | Done | Dev |
 | `TASK-3.3` | `ZKPAY-16` | Single-Use Join Request Gatekeeper (`creates_join_request`) | Malam 3: Telegram | Done | Dev |
-| `TASK-4.1` | `ZKPAY-17` | Renewal Worker & H-3 Reminder Job (Cron) | Malam 4: Lifecycle | In Progress | Dev |
-| `TASK-4.2` | `ZKPAY-18` | Grace Period & Eviction Worker (`ban` + `unban`) | Malam 4: Lifecycle | Todo | Dev |
-| `TASK-4.3` | `ZKPAY-19` | Edge Cases & Discrepancy Handler (Under/Overpaid) | Malam 4: Lifecycle | Todo | Dev |
-| `TASK-5.1` | `ZKPAY-20` | Creator Onboarding & UFVK Configuration View | Malam 5: Dashboard | Todo | Dev |
+| `TASK-4.1` | `ZKPAY-17` | Renewal Worker & H-3 Reminder Job (Cron) | Malam 4: Lifecycle | Done | Dev |
+| `TASK-4.2` | `ZKPAY-18` | Grace Period & Eviction Worker (`ban` + `unban`) | Malam 4: Lifecycle | Done | Dev |
+| `TASK-4.3` | `ZKPAY-19` | Edge Cases & Discrepancy Handler (Under/Overpaid) | Malam 4: Lifecycle | Done | Dev |
+| `TASK-5.1` | `ZKPAY-20` | Creator Onboarding & UFVK Configuration View | Malam 5: Dashboard | In Progress | Dev |
 | `TASK-5.2` | `ZKPAY-21` | Plan & Pricing Management Console | Malam 5: Dashboard | Todo | Dev |
 | `TASK-5.3` | `ZKPAY-22` | Subscriber Roster, Revenue Analytics & CSV Export | Malam 5: Dashboard | Todo | Dev |
 | `TASK-6.1` | `ZKPAY-23` | Live Zcash Testnet End-to-End Smoke Test | Malam 6: Testnet & Demo | Todo | QA / Dev |
@@ -53,9 +53,12 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 - `TASK-3.1`: Integrated grammY Telegram bot core in `lib/bot/bot.ts`, handlers for `/start`, `/help`, `/status`, and `/gabung`, and Next.js App Router webhook endpoint in `app/api/telegram/route.ts`.
 - `TASK-3.2`: Implemented ZIP-321 standard payment URI builder, parser, and PNG/Data URL/SVG QR code generation in `lib/zcash/zip321.ts`. Connected direct QR code rendering into bot response.
 - `TASK-3.3`: Implemented single-use join request gatekeeper in `lib/bot/gatekeeper.ts` listening to `chat_join_request` events to auto-approve verified shielded subscribers and auto-decline unauthorized link forwarders.
+- `TASK-4.1`: Implemented H-3 reminder worker in `lib/lifecycle/workers.ts` sending proactive renewal notices.
+- `TASK-4.2`: Implemented grace period transition and Telegram ban+unban kick evictions with cron endpoint in `app/api/cron/lifecycle/route.ts`.
+- `TASK-4.3`: Built payment discrepancy handler in `lib/lifecycle/discrepancy.ts` for partial payment top-ups and overpayment tip tracking.
 
 ### In Progress
-- `TASK-4.1`: Renewal Worker & H-3 Reminder Job (`ZKPAY-17`).
+- `TASK-5.1`: Creator Onboarding & UFVK Configuration View (`ZKPAY-20`).
 
 ### Need to Review
 *(Empty)*

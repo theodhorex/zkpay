@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "bun test",
-    "test:smoke": "bun run scripts/e2e-testnet-smoke.ts"
+    "test:smoke": "bun run scripts/e2e-testnet-smoke.ts",
+    "db:check": "bun run scripts/check-db.ts"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.6",

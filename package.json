@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.14.6",
+    "@grpc/proto-loader": "^0.8.1",
     "next": "16.4.2",
     "react": "19.3.0",
     "react-dom": "19.3.0"

@@ -4,9 +4,9 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 
 ## Active Focus
 
-- **Current Phase:** Malam 1 — Fondasi Zcash (UFVK Diversifier & Scanner Lightwalletd)
-- **Active Task:** `TASK-1.3` — Trial Decryption & Payment Detection Hook
-- **Target:** Trial-decrypt shielded compact outputs/actions using UFVK and match diversifier index to invoice.
+- **Current Phase:** Malam 2 — Database & State Machine (Invoice, Kurs 15 Min, Status)
+- **Active Task:** `TASK-2.1` — Database Schema & Drizzle ORM Setup (`ZKPAY-11`)
+- **Target:** Define relational schema (creators, plans, subscribers, invoices, audit_logs) and setup Drizzle ORM with SQLite/libsql.
 
 ---
 
@@ -19,8 +19,8 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 | `INIT-03` | `ZKPAY-6` | Technical Specification & Clean README Setup | Documentation | Done | Core |
 | `TASK-1.1` | `ZKPAY-8` | ZIP-316 UFVK Address Derivation Service | Malam 1: Zcash Core | Done | Dev |
 | `TASK-1.2` | `ZKPAY-9` | Lightwalletd Client & Block Fetcher | Malam 1: Zcash Core | Done | Dev |
-| `TASK-1.3` | `ZKPAY-10` | Trial Decryption & Payment Detection Hook | Malam 1: Zcash Core | In Progress | Dev |
-| `TASK-2.1` | `ZKPAY-11` | Database Schema & Drizzle ORM Setup | Malam 2: Data & State | Todo | Dev |
+| `TASK-1.3` | `ZKPAY-10` | Trial Decryption & Payment Detection Hook | Malam 1: Zcash Core | Done | Dev |
+| `TASK-2.1` | `ZKPAY-11` | Database Schema & Drizzle ORM Setup | Malam 2: Data & State | In Progress | Dev |
 | `TASK-2.2` | `ZKPAY-12` | Exchange Rate Oracle with 15-Minute Lock | Malam 2: Data & State | Todo | Dev |
 | `TASK-2.3` | `ZKPAY-13` | Invoicing State Machine Engine | Malam 2: Data & State | Todo | Dev |
 | `TASK-3.1` | `ZKPAY-14` | Telegram Bot Core & Command Handler (`/start`, `/gabung`) | Malam 3: Telegram | Todo | Dev |
@@ -46,9 +46,10 @@ Last Updated: 2026-10-18 (Milestone 1 Kickoff)
 - `INIT-03`: Documented complete privacy model, state machine, and system architecture in `README.md` (`372ce79`).
 - `TASK-1.1`: Implemented and tested ZIP-316 diversified address derivation from Unified Full Viewing Keys (`uview1...` / `uviewtest1...`) with Rust core engine and TypeScript wrapper (`lib/zcash/derive.ts`). Verified with 100% passing tests in both Rust and Bun.
 - `TASK-1.2`: Implemented `LightwalletdClient` in `lib/zcash/lightwalletd.ts` using `@grpc/grpc-js` and official `.proto` files. Connected live to `testnet.zec.rocks:443`, verified querying node info, latest block height (4,515,479+), and streaming compact blocks. Verified with 100% passing Bun tests.
+- `TASK-1.3`: Implemented Orchard and Sapling compact block trial decryption in Rust (`crates/zkpay-core/src/scanner.rs`) and TypeScript wrapper (`lib/zcash/scanner.ts`). Integrated live block scanning against testnet nodes. Verified with 100% passing test suite.
 
 ### In Progress
-- `TASK-1.3`: Trial Decryption & Payment Detection Hook.
+- `TASK-2.1`: Database Schema & Drizzle ORM Setup (`ZKPAY-11`).
 
 ### Need to Review
 *(Empty)*
